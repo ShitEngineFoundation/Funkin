@@ -57,10 +57,25 @@ class CoolUtil
 	}
 
 	/*
-	* just lerp that does camLerpShit for u so u dont have to do it every time
-	*/
+	 * just lerp that does camLerpShit for u so u dont have to do it every time
+	 */
 	public static function coolLerp(a:Float, b:Float, ratio:Float):Float
 	{
 		return FlxMath.lerp(a, b, camLerpShit(ratio));
+	}
+
+	/**
+	 * Modifies a lerp ratio based on current FPS to keep a stable speed on higher framerate.
+	 * @param ratio Ratio
+	 * @return FPS-Modified Ratio
+	 */
+	public static function getFPSRatio(ratio:Float):Float
+	{
+		return 1.0 - Math.pow(1.0 - ratio, FlxG.elapsed * 60);
+	}
+
+	public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float
+	{
+		return FlxMath.lerp(v1, v2, getFPSRatio(ratio));
 	}
 }

@@ -1,5 +1,6 @@
 package;
 
+import haxe.Http;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -10,7 +11,7 @@ import lime.app.Application;
 class OutdatedSubState extends MusicBeatState
 {
 	public static var leftState:Bool = false;
-	public static var latestVer = "";
+	public static var latestVer = Http.requestUrl("https://github.com/ShitEngineFoundation/Funkin/blob/legacy/0.2.x/.version");
 	override function create()
 	{
 		super.create();

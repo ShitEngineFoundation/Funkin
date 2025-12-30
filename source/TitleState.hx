@@ -70,11 +70,6 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		#if polymod
-		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod'], framework: OPENFL});
-		// FlxG.bitmap.clearCache();
-		#end
-
 		startedIntro = false;
 
 		FlxG.game.focusLostFramerate = 60;
@@ -354,17 +349,6 @@ class TitleState extends MusicBeatState
 			FlxG.switchState(new CutsceneAnimTestState());
 		#end
 
-		/* 
-			if (FlxG.keys.justPressed.R)
-			{
-				#if polymod
-				polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
-				trace('reinitialized');
-				#end
-			}
-
-		 */
-
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
@@ -420,9 +404,9 @@ class TitleState extends MusicBeatState
 				// Check if version is outdated
 
 				var localVersion:String = Application.current.meta.get('version');
-				var onlineVersion = OutdatedSubState.latestVer = "0.2.9";
+				var onlineVersion = OutdatedSubState.latestVer;
 
-				if (localVersion.trim() != onlineVersion)
+				if (localVersion.trim() != onlineVersion.trim())
 					FlxG.switchState(new OutdatedSubState());
 				else
 					FlxG.switchState(new MainMenuState());

@@ -7,10 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.9]
 ### Fixed
-- Hold notes should now actually work (no more early disappears or 1-frame clips)
-- Menu lerps and icon bops should feel smooth again, even on high FPS
-- Update checker now correctly reads the GitHub version file
+- Fixed hold notes being weird (disappearing too early, clipping 1 frame late)
+- Fixed menu lerps and icon bops going way too fast on high FPS
+- Fixed update checker to use the GitHub version file (github.com/fnfup/tags/0.2.9/version.txt)
 
+### Added
+- Added `getFPSRatio` to CoolUtil for FPS-stable lerps
+- Added `fpsLerp` to CoolUtil to interpolate values using FPS-adjusted ratio
+
+### Removed
+- Removed `modmenu.hx` (was unused and unnecessary)
+- Removed Polymod entirely
 
 ## [0.2.8]
 ### Added

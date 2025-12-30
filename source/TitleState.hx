@@ -48,6 +48,7 @@ import sys.thread.Thread;
 class TitleState extends MusicBeatState
 {
 	public static var initialized:Bool = false;
+
 	var startedIntro:Bool;
 
 	var blackScreen:FlxSprite;
@@ -416,26 +417,17 @@ class TitleState extends MusicBeatState
 			#if newgrounds
 			if (!OutdatedSubState.leftState)
 			{
-				NGio.checkVersion(function(version)
-				{
-					// Check if version is outdated
+				// Check if version is outdated
 
-					var localVersion:String = "v" + Application.current.meta.get('version');
-					var onlineVersion = version.split(" ")[0].trim();
+				var localVersion:String = Application.current.meta.get('version');
+				var onlineVersion = OutdatedSubState.latestVer = "0.2.9";
 
-					if (version.trim() != onlineVersion)
-					{
-						trace('OLD VERSION!');
-						// FlxG.switchState(new OutdatedSubState());
-					}
-					else
-					{
-						// FlxG.switchState(new MainMenuState());
-					}
-
-					// REDO FOR ITCH/FINAL SHIT
+				if (localVersion.trim() != onlineVersion)
+					FlxG.switchState(new OutdatedSubState());
+				else
 					FlxG.switchState(new MainMenuState());
-				});
+
+				// REDO FOR ITCH/FINAL SHIT
 			}
 			#else
 			FlxG.switchState(new MainMenuState());
@@ -507,7 +499,7 @@ class TitleState extends MusicBeatState
 		super.beatHit();
 
 		if (!startedIntro)
-			return ;
+			return;
 
 		if (skippedIntro)
 		{

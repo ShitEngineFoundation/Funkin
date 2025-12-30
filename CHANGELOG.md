@@ -4,7 +4,15 @@ All notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+
+## [0.2.9]
+### Fixed
+- Hold notes should now actually work (no more early disappears or 1-frame clips)
+- Menu lerps and icon bops should feel smooth again, even on high FPS
+- Update checker now correctly reads the GitHub version file
+
+
+## [0.2.8]
 ### Added
 - TANKMAN! 3 NEW SONGS BY KAWAISPRITE (UGH, GUNS, STRESS)! Charting help by MtH!
 - Monster added into week 2, FINALLY (Charting help by MtH and ChaoticGamer!)

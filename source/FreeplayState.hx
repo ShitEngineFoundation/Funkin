@@ -1,5 +1,6 @@
 package;
 
+import lime.app.Application;
 import haxe.Exception;
 #if discord_rpc
 import Discord.DiscordClient;
@@ -246,10 +247,12 @@ class FreeplayState extends MusicBeatState
 				trace('CUR WEEK' + PlayState.storyWeek);
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
-			catch (e:Exception)
+			catch (e:Dynamic)
 			{
 				trace('ERROR');
-				trace(e);
+				Application.current.window.alert(Std.string(e),
+					'error loading song ' + Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty));
+				FlxG.resetState();
 			}
 		}
 	}

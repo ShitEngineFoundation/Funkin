@@ -11,7 +11,7 @@ import lime.app.Application;
 class OutdatedSubState extends MusicBeatState
 {
 	public static var leftState:Bool = false;
-	public static var latestVer = Http.requestUrl("https://raw.githubusercontent.com/ShitEngineFoundation/Funkin/legacy/0.2.x/.version");
+	public static var latestVer = #if (!web) Http.requestUrl("https://raw.githubusercontent.com/ShitEngineFoundation/Funkin/legacy/0.2.x/.version") #else "0.2.9" #end;
 
 	override function create()
 	{

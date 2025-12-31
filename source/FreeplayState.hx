@@ -236,16 +236,10 @@ class FreeplayState extends MusicBeatState
 
 		if (accepted)
 		{
+			var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
 			try
 			{
-				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
 				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
-				PlayState.isStoryMode = false;
-				PlayState.storyDifficulty = curDifficulty;
-
-				PlayState.storyWeek = songs[curSelected].week;
-				trace('CUR WEEK' + PlayState.storyWeek);
-				LoadingState.loadAndSwitchState(new PlayState());
 			}
 			catch (e:Dynamic)
 			{
@@ -253,7 +247,14 @@ class FreeplayState extends MusicBeatState
 				Application.current.window.alert(Std.string(e),
 					'error loading song ' + Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty));
 				FlxG.resetState();
+				return;
 			}
+			PlayState.isStoryMode = false;
+			PlayState.storyDifficulty = curDifficulty;
+
+			PlayState.storyWeek = songs[curSelected].week;
+			trace('CUR WEEK' + PlayState.storyWeek);
+			LoadingState.loadAndSwitchState(new PlayState());
 		}
 	}
 

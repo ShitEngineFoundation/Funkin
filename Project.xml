@@ -42,7 +42,7 @@
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-	<define name="32bits" if="x86"/>
+	<define name="32bits" if="x86" />
 	<architecture name="x86" exclude="x64" if="32bits" />
 
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
@@ -195,6 +195,7 @@
 	<!--Disable
 	the Flixel core focus lost screen-->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
+
 
 	<!--Disable
 	the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->

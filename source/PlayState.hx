@@ -2106,10 +2106,10 @@ class PlayState extends MusicBeatState
 		{
 			var dunceNote:Note = unspawnNotes[0];
 			dunceNote.lastSpeed = SONG.speed;
-			notes.add(dunceNote);
+			notes.insert(0,dunceNote);
 
-			var index:Int = unspawnNotes.indexOf(dunceNote);
-			unspawnNotes.shift();
+	
+			unspawnNotes.remove(dunceNote);
 		}
 
 		if (!inCutscene)

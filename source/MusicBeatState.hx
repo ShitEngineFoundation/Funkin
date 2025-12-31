@@ -29,12 +29,17 @@ class MusicBeatState extends FlxUIState
 	{
 		// everyStep();
 		var oldStep:Int = curStep;
+		var oldBeat:Int = curBeat;
 
 		updateCurStep();
 		updateBeat();
 
+
 		if (oldStep != curStep && curStep >= 0)
 			stepHit();
+
+		if (oldBeat != curBeat && oldBeat >= 0)
+			beatHit();
 
 		super.update(elapsed);
 	}
@@ -62,8 +67,7 @@ class MusicBeatState extends FlxUIState
 
 	public function stepHit():Void
 	{
-		if (curStep % 4 == 0)
-			beatHit();
+		// do nothing too dumbass
 	}
 
 	public function beatHit():Void

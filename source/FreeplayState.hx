@@ -1,5 +1,6 @@
 package;
 
+import haxe.Exception;
 #if discord_rpc
 import Discord.DiscordClient;
 #end
@@ -55,11 +56,9 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		var isDebug:Bool = false;
+		#if debug isDebug = true; #end
 
-		#if debug
-		isDebug = true;
 		addSong('Test', 1, 'bf-pixel');
-		#end
 
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
@@ -236,14 +235,22 @@ class FreeplayState extends MusicBeatState
 
 		if (accepted)
 		{
-			var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
-			PlayState.isStoryMode = false;
-			PlayState.storyDifficulty = curDifficulty;
+			try
+			{
+				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
+				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+				PlayState.isStoryMode = false;
+				PlayState.storyDifficulty = curDifficulty;
 
-			PlayState.storyWeek = songs[curSelected].week;
-			trace('CUR WEEK' + PlayState.storyWeek);
-			LoadingState.loadAndSwitchState(new PlayState());
+				PlayState.storyWeek = songs[curSelected].week;
+				trace('CUR WEEK' + PlayState.storyWeek);
+				LoadingState.loadAndSwitchState(new PlayState());
+			}
+			catch (e:Exception)
+			{
+				trace('ERROR');
+				trace(e);
+			}
 		}
 	}
 

@@ -494,13 +494,12 @@ class TitleState extends MusicBeatState
 			danceLeft = !danceLeft;
 
 			if (danceLeft)
-				gfDance.animation.play('danceRight');
+				gfDance.animation.play('danceRight', true);
 			else
-				gfDance.animation.play('danceLeft');
+				gfDance.animation.play('danceLeft', true);
 		}
 		else
 		{
-			FlxG.log.add(curBeat);
 			// if the user is draggin the window some beats will
 			// be missed so this is just to compensate
 			if (curBeat > lastBeat)

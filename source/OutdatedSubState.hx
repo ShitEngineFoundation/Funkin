@@ -11,12 +11,12 @@ import lime.app.Application;
 class OutdatedSubState extends MusicBeatState
 {
 	public static var leftState:Bool = false;
-	public static var latestVer = Http.requestUrl("https://github.com/ShitEngineFoundation/Funkin/blob/legacy/0.2.x/.version");
+	public static var latestVer = Http.requestUrl("https://raw.githubusercontent.com/ShitEngineFoundation/Funkin/legacy/0.2.x/.version");
+
 	override function create()
 	{
 		super.create();
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		add(bg);
+	
 		var ver = "v" + Application.current.meta.get('version');
 		var txt:FlxText = new FlxText(0, 0, FlxG.width,
 			"HEY! You're running an outdated version of the game!\nCurrent version is "

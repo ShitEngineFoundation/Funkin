@@ -1,5 +1,6 @@
 package;
 
+import flixel.math.FlxRect;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -20,6 +21,7 @@ class Note extends FlxSprite
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
+	public var enemyHit:Bool = false;
 	public var prevNote:Note;
 
 	private var willMiss:Bool = false;
@@ -168,7 +170,7 @@ class Note extends FlxSprite
 
 			if (PlayState.curStage.startsWith('school'))
 				x += 30;
-
+			sustainLength = Conductor.stepCrochet;
 			if (prevNote.isSustainNote)
 			{
 				switch (prevNote.noteData)
@@ -183,7 +185,6 @@ class Note extends FlxSprite
 						prevNote.animation.play('redhold');
 				}
 
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.SONG.speed;
 				prevNote.updateHitbox();
 				// prevNote.setGraphicSize();
 			}
@@ -198,6 +199,11 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		if (sustainLength > 0 && isSustainNote)
+		{
+			scale.y = (sustainLength * 0.45 * lastSpeed) / frameHeight;
+			updateHitbox();
+		}
 
 		if (mustPress)
 		{
@@ -234,5 +240,49 @@ class Note extends FlxSprite
 			if (alpha > 0.3)
 				alpha = 0.3;
 		}
+	}
+
+	public var lastSpeed:Float = 1;
+
+	public function clipToStrumNote(center:Float = 0, flipped:Bool = false)
+	{
+		center += Note.swagWidth / 2;
+		var ignoreNote = tooLate;
+		if (!isSustainNote)
+			return;
+		if ((mustPress || !ignoreNote) && (wasGoodHit || (prevNote.wasGoodHit && !canBeHit)))
+		{
+			var swagRect:FlxRect = clipRect;
+			if (swagRect == null)
+				swagRect = new FlxRect(0, 0, frameWidth, frameHeight);
+
+			if (flipped)
+			{
+				if (y + height >= center)
+				{
+					swagRect.width = frameWidth;
+					swagRect.height = (center - y) / scale.y;
+					swagRect.y = frameHeight - swagRect.height;
+				}
+			}
+			else if (y <= center)
+			{
+				swagRect.y = (center - y) / scale.y;
+				swagRect.width = width / scale.x;
+				swagRect.height = (height / scale.y) - swagRect.y;
+			}
+			clipRect = swagRect;
+		}
+	}
+
+	@:noCompletion
+	override function set_clipRect(rect:FlxRect):FlxRect
+	{
+		clipRect = rect;
+
+		if (frames != null)
+			frame = frames.frames[animation.frameIndex];
+
+		return rect;
 	}
 }

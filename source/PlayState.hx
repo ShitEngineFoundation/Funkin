@@ -1966,11 +1966,8 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		iconP1.setGraphicSize(Std.int(CoolUtil.fpsLerp(150, iconP1.width, 0.85)));
-		iconP2.setGraphicSize(Std.int(CoolUtil.fpsLerp(150, iconP2.width, 0.85)));
-
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
+		iconP1.updateBump();
+		iconP2.updateBump();
 
 		var iconOffset:Int = 26;
 
@@ -2024,8 +2021,8 @@ class PlayState extends MusicBeatState
 
 		if (camZooming)
 		{
-			FlxG.camera.zoom = CoolUtil.fpsLerp(defaultCamZoom, FlxG.camera.zoom, 0.95);
-			camHUD.zoom = CoolUtil.fpsLerp(1, camHUD.zoom, 0.95);
+			FlxG.camera.zoom = CoolUtil.fpsLerp(defaultCamZoom, FlxG.camera.zoom, 8);
+			camHUD.zoom = CoolUtil.fpsLerp(1, camHUD.zoom, 8);
 		}
 
 		FlxG.watch.addQuick("beatShit", curBeat);
@@ -2108,71 +2105,40 @@ class PlayState extends MusicBeatState
 		while (unspawnNotes[0] != null && unspawnNotes[0].strumTime - Conductor.songPosition < 1800 / SONG.speed)
 		{
 			var dunceNote:Note = unspawnNotes[0];
+			dunceNote.lastSpeed = SONG.speed;
 			notes.add(dunceNote);
 
 			var index:Int = unspawnNotes.indexOf(dunceNote);
 			unspawnNotes.shift();
 		}
 
+		if (!inCutscene)
+			keyShit();
 		if (generatedMusic)
 		{
 			notes.forEachAlive(function(daNote:Note)
 			{
-				if ((PreferencesMenu.getPref('downscroll') && daNote.y < -daNote.height)
-					|| (!PreferencesMenu.getPref('downscroll') && daNote.y > FlxG.height))
-				{
-					daNote.active = false;
-					daNote.visible = false;
-				}
-				else
-				{
-					daNote.visible = true;
-					daNote.active = true;
-				}
+				daNote.visible = daNote.active = daNote.isOnScreen(camHUD);
 
-				var strumLineMid = strumLine.y + Note.swagWidth / 2;
-
+				var target = daNote.mustPress ? playerStrums.members[daNote.noteData] : strumLineNotes.members[daNote.noteData];
 				if (PreferencesMenu.getPref('downscroll'))
-				{
 					daNote.y = (strumLine.y + (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
-
-					if (daNote.isSustainNote)
-					{
-						if (daNote.animation.curAnim.name.endsWith("end") && daNote.prevNote != null)
-							daNote.y += daNote.prevNote.height;
-						else
-							daNote.y += daNote.height / 2;
-
-						if ((!daNote.mustPress || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit)))
-							&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= strumLineMid)
-						{
-							// clipRect is applied to graphic itself so use frame Heights
-							var swagRect:FlxRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
-
-							swagRect.height = (strumLineMid - daNote.y) / daNote.scale.y;
-							swagRect.y = daNote.frameHeight - swagRect.height;
-							daNote.clipRect = swagRect;
-						}
-					}
-				}
 				else
-				{
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
 
-					if (daNote.isSustainNote
-						&& (!daNote.mustPress || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit)))
-						&& daNote.y + daNote.offset.y * daNote.scale.y <= strumLineMid)
-					{
-						var swagRect:FlxRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-
-						swagRect.y = (strumLineMid - daNote.y) / daNote.scale.y;
-						swagRect.height -= swagRect.y;
-						daNote.clipRect = swagRect;
-					}
+				if (PreferencesMenu.getPref('downscroll') && daNote.isSustainNote)
+				{
+					daNote.y -= daNote.frameHeight * daNote.scale.y;
+					daNote.y += Note.swagWidth;
 				}
 
-				if (!daNote.mustPress && daNote.wasGoodHit)
+				if (daNote.isSustainNote)
+					daNote.clipToStrumNote(strumLine.y, PreferencesMenu.getPref('downscroll'));
+
+				if (!daNote.mustPress && daNote.wasGoodHit && !daNote.enemyHit)
 				{
+					daNote.enemyHit = true;
+
 					if (SONG.song != 'Tutorial')
 						camZooming = true;
 
@@ -2201,39 +2167,32 @@ class PlayState extends MusicBeatState
 
 					dad.holdTimer = 0;
 
-					if (SONG.needsVoices)
+					if (SONG.needsVoices && vocals.volume < 1)
 						vocals.volume = 1;
 
-					daNote.kill();
-					notes.remove(daNote, true);
-					daNote.destroy();
-				}
-
-				// WIP interpolation shit? Need to fix the pause issue
-				// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * SONG.speed));
-
-				// removing this so whether the note misses or not is entirely up to Note class
-				// var noteMiss:Bool = daNote.y < -daNote.height;
-
-				// if (PreferencesMenu.getPref('downscroll'))
-				// noteMiss = daNote.y > FlxG.height;
-
-				if (daNote.isSustainNote && daNote.wasGoodHit)
-				{
-					if ((!PreferencesMenu.getPref('downscroll') && daNote.y < -daNote.height)
-						|| (PreferencesMenu.getPref('downscroll') && daNote.y > FlxG.height))
+					target.animation.play('confirm', true);
+					target.centerOffsets();
+					if (curStage.indexOf("school") == -1)
+						target.offset.subtract(15, 15);
+					target.animation.finishCallback ??= (a) ->
 					{
-						daNote.active = false;
-						daNote.visible = false;
+						target.animation.play('static');
+						target.centerOffsets();
+					};
 
+					if (!daNote.isSustainNote)
+					{
 						daNote.kill();
 						notes.remove(daNote, true);
 						daNote.destroy();
 					}
 				}
-				else if (daNote.tooLate || daNote.wasGoodHit)
+
+				final rangeMiss = Math.max(350 / SONG.speed, Conductor.stepCrochet);
+
+				if (daNote.tooLate || daNote.strumTime <= Conductor.songPosition - rangeMiss)
 				{
-					if (daNote.tooLate)
+					if (daNote.tooLate || !daNote.wasGoodHit && daNote.mustPress)
 					{
 						health -= 0.0475;
 						vocals.volume = 0;
@@ -2249,9 +2208,6 @@ class PlayState extends MusicBeatState
 				}
 			});
 		}
-
-		if (!inCutscene)
-			keyShit();
 	}
 
 	function killCombo():Void
@@ -3007,11 +2963,8 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-		iconP2.setGraphicSize(Std.int(iconP2.width + 30));
-
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
+		iconP1.bump();
+		iconP2.bump();
 
 		if (curBeat % gfSpeed == 0)
 			gf.dance();

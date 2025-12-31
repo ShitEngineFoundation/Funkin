@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import Section.SwagSection;
 import haxe.Json;
 import haxe.format.JsonParser;
@@ -40,7 +41,7 @@ class Song
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
-		var rawJson = Assets.getText(Paths.json(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
+		var rawJson = FlxG.assets.getText(Paths.json(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
 
 		while (!rawJson.endsWith("}"))
 		{

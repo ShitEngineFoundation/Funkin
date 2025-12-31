@@ -413,6 +413,8 @@ class TitleState extends MusicBeatState
 
 				// REDO FOR ITCH/FINAL SHIT
 			}
+			else
+				FlxG.switchState(new MainMenuState());
 			#else
 			FlxG.switchState(new MainMenuState());
 			#end

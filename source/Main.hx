@@ -1,6 +1,5 @@
 package;
 
-import flixel.system.FlxModding;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
@@ -22,7 +21,7 @@ class Main extends Sprite
 	var initialState:Class<FlxState> = TitleState; // The FlxState the game starts with.
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 
-	var framerate:Int = 240; // How many frames per second the game should run at.
+	var framerate:Int = 64; // How many frames per second the game should run at.
 
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
@@ -31,7 +30,6 @@ class Main extends Sprite
 
 	public static function main():Void
 	{
-		FlxModding.init();
 		Lib.current.addChild(new Main());
 	}
 
@@ -81,6 +79,23 @@ class Main extends Sprite
 
 		#if !debug
 		initialState = TitleState;
+		#end
+
+		#if sys
+		for (arg in Sys.args())
+		{
+			if (StringTools.startsWith(arg, "FPS="))
+			{
+				var value = arg.substr(4); // length of "FPS="
+				var parsed = Std.parseInt(value);
+				if (parsed != null && parsed > 0)
+				{
+					framerate = parsed;
+				}
+			}
+		}
+
+		trace("FPS set to: " + framerate);
 		#end
 
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));

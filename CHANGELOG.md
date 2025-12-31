@@ -10,14 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed hold notes being weird (disappearing too early, clipping 1 frame late)
 - Fixed menu lerps and icon bops going way too fast on high FPS
 - Fixed update checker to use the GitHub version file (github.com/fnfup/tags/0.2.9/version.txt)
+- TitleState softlock
 
 ### Added
-- Added `getFPSRatio` to CoolUtil for FPS-stable lerps
-- Added `fpsLerp` to CoolUtil to interpolate values using FPS-adjusted ratio
+- Added `fpsLerp` because FlxMath.lerp stinks and doesnt account for framerate
 
 ### Removed
 - Removed `modmenu.hx` (was unused and unnecessary)
-- Removed Polymod entirely
+- Removed Polymod entirely because yes
 
 ## [0.2.8]
 ### Added

@@ -1,5 +1,7 @@
 package;
 
+import flixel.math.FlxPoint;
+import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxRect;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -91,12 +93,12 @@ class Note extends FlxSprite
 				updateHitbox();
 
 			default:
-				frames = Paths.getSparrowAtlas('NOTE_assets');
+				frames = Paths.getSparrowAtlas('game/notes/default');
 
-				animation.addByPrefix('greenScroll', 'green instance');
-				animation.addByPrefix('redScroll', 'red instance');
-				animation.addByPrefix('blueScroll', 'blue instance');
-				animation.addByPrefix('purpleScroll', 'purple instance');
+				animation.addByPrefix('greenScroll', 'green0');
+				animation.addByPrefix('redScroll', 'red0');
+				animation.addByPrefix('blueScroll', 'blue0');
+				animation.addByPrefix('purpleScroll', 'purple0');
 
 				animation.addByPrefix('purpleholdend', 'pruple end hold');
 				animation.addByPrefix('greenholdend', 'green hold end');
@@ -196,10 +198,13 @@ class Note extends FlxSprite
 		colorSwap.update(arrowColors[noteData]);
 	}
 
+	public var parent:Note;
+	public var notePosOffset:FlxPoint = FlxPoint.get();
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if (sustainLength > 0 && isSustainNote)
+		if (sustainLength > 0 && isSustainNote && animation.name.indexOf("end") == -1)
 		{
 			scale.y = (sustainLength * 0.45 * lastSpeed) / frameHeight;
 			updateHitbox();
@@ -250,11 +255,9 @@ class Note extends FlxSprite
 		var ignoreNote = tooLate;
 		if (!isSustainNote)
 			return;
-		if ((mustPress || !ignoreNote) && (wasGoodHit || (prevNote.wasGoodHit && !canBeHit)))
+		if (wasGoodHit || prevNote.wasGoodHit && strumTime <= Conductor.songPosition + (Conductor.safeZoneOffset * 0.67))
 		{
-			var swagRect:FlxRect = clipRect;
-			if (swagRect == null)
-				swagRect = new FlxRect(0, 0, frameWidth, frameHeight);
+			var swagRect:FlxRect = clipRect ?? new FlxRect(0, 0, frameWidth, frameHeight);
 
 			if (flipped)
 			{
@@ -275,14 +278,9 @@ class Note extends FlxSprite
 		}
 	}
 
-	@:noCompletion
-	override function set_clipRect(rect:FlxRect):FlxRect
+	override function destroy()
 	{
-		clipRect = rect;
-
-		if (frames != null)
-			frame = frames.frames[animation.frameIndex];
-
-		return rect;
+		super.destroy();
+		notePosOffset = FlxDestroyUtil.put(notePosOffset);
 	}
 }

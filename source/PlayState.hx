@@ -1617,7 +1617,6 @@ class PlayState extends MusicBeatState
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 				swagNote.sustainLength = songNotes[2];
 				swagNote.altNote = songNotes[3];
-				swagNote.scrollFactor.set(0, 0);
 
 				var susLength:Float = swagNote.sustainLength;
 
@@ -1628,8 +1627,9 @@ class PlayState extends MusicBeatState
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true);
-					sustainNote.scrollFactor.set();
+					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + 5, daNoteData, oldNote, true);
+					sustainNote.parent = swagNote;
+					sustainNote.notePosOffset.set(0, sustainNote.parent.height / 2);
 					unspawnNotes.push(sustainNote);
 
 					sustainNote.mustPress = gottaHitNote;
@@ -1715,7 +1715,7 @@ class PlayState extends MusicBeatState
 					}
 
 				default:
-					babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
+					babyArrow.frames = Paths.getSparrowAtlas('game/notes/default');
 					babyArrow.animation.addByPrefix('green', 'arrowUP');
 					babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
 					babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
@@ -1728,22 +1728,22 @@ class PlayState extends MusicBeatState
 					{
 						case 0:
 							babyArrow.x += Note.swagWidth * 0;
-							babyArrow.animation.addByPrefix('static', 'arrow static instance 1');
+							babyArrow.animation.addByPrefix('static', 'arrowLEFT');
 							babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
 							babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
 						case 1:
 							babyArrow.x += Note.swagWidth * 1;
-							babyArrow.animation.addByPrefix('static', 'arrow static instance 2');
+							babyArrow.animation.addByPrefix('static', 'arrowDOWN');
 							babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
 							babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
 						case 2:
 							babyArrow.x += Note.swagWidth * 2;
-							babyArrow.animation.addByPrefix('static', 'arrow static instance 4');
+							babyArrow.animation.addByPrefix('static', 'arrowUP');
 							babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
 							babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
 						case 3:
 							babyArrow.x += Note.swagWidth * 3;
-							babyArrow.animation.addByPrefix('static', 'arrow static instance 3');
+							babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
 							babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
 							babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
 					}
@@ -2129,8 +2129,8 @@ class PlayState extends MusicBeatState
 				if (PreferencesMenu.getPref('downscroll') && daNote.isSustainNote)
 				{
 					daNote.y -= daNote.frameHeight * daNote.scale.y;
-					daNote.y += Note.swagWidth;
 				}
+				daNote.y += daNote.notePosOffset.y;
 
 				if (daNote.isSustainNote)
 					daNote.clipToStrumNote(strumLine.y, PreferencesMenu.getPref('downscroll'));
@@ -2172,12 +2172,12 @@ class PlayState extends MusicBeatState
 
 					target.animation.play('confirm', true);
 					target.centerOffsets();
-					if (curStage.indexOf("school") == -1)
-						target.offset.subtract(15, 15);
+					target.centerOrigin();
 					target.animation.finishCallback ??= (a) ->
 					{
 						target.animation.play('static');
 						target.centerOffsets();
+						target.centerOrigin();
 					};
 
 					if (!daNote.isSustainNote)
@@ -2685,18 +2685,17 @@ class PlayState extends MusicBeatState
 		playerStrums.forEach(function(spr:FlxSprite)
 		{
 			if (pressArray[spr.ID] && spr.animation.curAnim.name != 'confirm')
-				spr.animation.play('pressed');
-			if (!holdArray[spr.ID])
-				spr.animation.play('static');
-
-			if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
 			{
+				spr.animation.play('pressed');
 				spr.centerOffsets();
-				spr.offset.x -= 13;
-				spr.offset.y -= 13;
+				spr.centerOrigin();
 			}
-			else
+			if (!holdArray[spr.ID])
+			{
+				spr.animation.play('static');
 				spr.centerOffsets();
+				spr.centerOrigin();
+			}
 		});
 	}
 
@@ -2780,13 +2779,10 @@ class PlayState extends MusicBeatState
 					boyfriend.playAnim('singRIGHT', true);
 			}
 
-			playerStrums.forEach(function(spr:FlxSprite)
-			{
-				if (Math.abs(note.noteData) == spr.ID)
-				{
-					spr.animation.play('confirm', true);
-				}
-			});
+			var spr = playerStrums.members[note.noteData];
+			spr.animation.play('confirm', true);
+			spr.centerOffsets();
+			spr.centerOrigin();
 
 			note.wasGoodHit = true;
 			vocals.volume = 1;

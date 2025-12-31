@@ -106,7 +106,6 @@
 
 	<!-- <assets path='example_mods' rename='mods' embed='false'/> -->
 
-	<template path="example_mods" rename="mods" />
 
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	<!-- <template path='mods' /> -->
@@ -129,8 +128,6 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
 
-
-	<assets path="mods" />
 
 	<!--In
 	case you want to use the ui package-->

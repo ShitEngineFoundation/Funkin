@@ -257,6 +257,17 @@ class Character extends FlxSprite
 
 				loadMappedAnims();
 
+			case "deadbf":
+				var tex = Paths.getSparrowAtlas('characters/BOYFRIENDdead');
+				frames = tex;
+
+				quickAnimAdd('firstDeath', "BF dies");
+				animation.addByPrefix('deathLoop', "BF Dead Loop", 24, true);
+				quickAnimAdd('deathConfirm', "BF Dead confirm");
+				loadOffsetFile("bf-dead");
+
+				playAnim('idle');
+
 			case 'bf':
 				var tex = Paths.getSparrowAtlas('characters/BOYFRIEND');
 				frames = tex;
@@ -277,7 +288,7 @@ class Character extends FlxSprite
 
 				animation.addByPrefix('scared', 'BF idle shaking', 24, true);
 
-				loadOffsetFile(curCharacter);
+
 
 				playAnim('idle');
 
@@ -574,8 +585,6 @@ class Character extends FlxSprite
 			if (!animation.curAnim.name.startsWith('sing') && animation.curAnim.finished)
 				playAnim('idleHair');
 		}
-
-		
 
 		super.update(elapsed);
 	}

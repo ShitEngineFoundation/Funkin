@@ -44,6 +44,7 @@ class Note extends FlxSprite
 	public static var RED_NOTE:Int = 3;
 
 	public static var arrowColors:Array<Float> = [1, 1, 1, 1];
+	public static var colorNames = ['purple', 'blue', 'green', 'red'];
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
 	{
@@ -55,6 +56,7 @@ class Note extends FlxSprite
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
 
+		var color = colorNames[noteData];
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
@@ -109,6 +111,7 @@ class Note extends FlxSprite
 				animation.addByPrefix('greenhold', 'green hold piece');
 				animation.addByPrefix('redhold', 'red hold piece');
 				animation.addByPrefix('bluehold', 'blue hold piece');
+				animation.addByPrefix('hold','$color hold piece0');
 
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
@@ -204,11 +207,6 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if (sustainLength > 0 && isSustainNote && animation.name.indexOf("end") == -1)
-		{
-			scale.y = (sustainLength * 0.45 * lastSpeed) / frameHeight;
-			updateHitbox();
-		}
 
 		if (mustPress)
 		{
@@ -249,33 +247,24 @@ class Note extends FlxSprite
 
 	public var lastSpeed:Float = 1;
 
-	public function clipToStrumNote(center:Float = 0, flipped:Bool = false)
-	{
-		center += Note.swagWidth / 2;
-		var ignoreNote = tooLate;
-		if (!isSustainNote)
-			return;
-		if (wasGoodHit || prevNote.wasGoodHit && strumTime <= Conductor.songPosition + (Conductor.safeZoneOffset * 0.67))
+	public function updateSustainClip()
+		if (wasGoodHit)
 		{
-			var swagRect:FlxRect = clipRect ?? new FlxRect(0, 0, frameWidth, frameHeight);
-
-			if (flipped)
-			{
-				if (y + height >= center)
-				{
-					swagRect.width = frameWidth;
-					swagRect.height = (center - y) / scale.y;
-					swagRect.y = frameHeight - swagRect.height;
-				}
-			}
-			else if (y <= center)
-			{
-				swagRect.y = (center - y) / scale.y;
-				swagRect.width = width / scale.x;
-				swagRect.height = (height / scale.y) - swagRect.y;
-			}
-			clipRect = swagRect;
+			var t = FlxMath.bound((Conductor.songPosition - strumTime) / height * 0.45 * lastSpeed, 0, 1);
+			var rect = clipRect == null ? FlxRect.get() : clipRect;
+			clipRect = rect.set(0, frameHeight * t, frameWidth, frameHeight * (1 - t));
 		}
+
+	override function draw()
+	{
+		if (sustainLength > 0 && isSustainNote)
+		{
+			if (animation.name.indexOf("end") == -1)
+				scale.y = (sustainLength * 0.45 * lastSpeed) / frameHeight;
+			updateHitbox();
+			updateSustainClip();
+		}
+		super.draw();
 	}
 
 	override function destroy()

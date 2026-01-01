@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.display.FlxTiledSprite;
 import Conductor.BPMChangeEvent;
 import Section.SwagSection;
 import Song.SwagSong;
@@ -887,8 +888,10 @@ class ChartingState extends MusicBeatState
 
 			if (daSus > 0)
 			{
-				var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE / 2),
-					note.y + GRID_SIZE).makeGraphic(8, Math.floor(FlxMath.remapToRange(daSus, 0, Conductor.stepCrochet * 16, 0, gridBG.height)));
+				var sustainFrame = note.frames.frames[note.animation.getByName("hold").frames[0]];
+				var sustainVis:FlxSprite = new FlxTiledSprite(sustainFrame.paint(), 8,
+					Math.floor(FlxMath.remapToRange(daSus, 0, Conductor.stepCrochet * 16, 0, gridBG.height)), false, true);
+				sustainVis.setPosition(note.x + (GRID_SIZE / 2), note.y + GRID_SIZE);
 				curRenderedSustains.add(sustainVis);
 			}
 		}

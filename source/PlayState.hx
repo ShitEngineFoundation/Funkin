@@ -1728,9 +1728,6 @@ class PlayState extends MusicBeatState
 					goodNoteHit(daNote);
 				}
 
-				if (daNote.isSustainNote)
-					daNote.clipToStrumNote(target.y, PreferencesMenu.getPref('downscroll'));
-
 				if (!daNote.mustPress && daNote.wasGoodHit && !daNote.enemyHit)
 				{
 					daNote.enemyHit = true;

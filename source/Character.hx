@@ -558,21 +558,13 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if (!curCharacter.startsWith('bf'))
+		if (holdTimer != 0)
 		{
-			if (animation.curAnim.name.startsWith('sing'))
+			holdTimer -= elapsed;
+			if (holdTimer <= 0)
 			{
-				holdTimer += elapsed;
-			}
-
-			var dadVar:Float = 4;
-
-			if (curCharacter == 'dad')
-				dadVar = 6.1;
-			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
-			{
-				dance();
 				holdTimer = 0;
+				dance(2);
 			}
 		}
 
@@ -583,79 +575,37 @@ class Character extends FlxSprite
 				playAnim('idleHair');
 		}
 
-		switch (curCharacter)
-		{
-			case 'gf':
-				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-					playAnim('danceRight');
-			case "pico-speaker":
-				// for pico??
-				if (animationNotes.length > 0)
-				{
-					if (Conductor.songPosition > animationNotes[0][0])
-					{
-						trace('played shoot anim' + animationNotes[0][1]);
-
-						var shootAnim:Int = 1;
-
-						if (animationNotes[0][1] >= 2)
-							shootAnim = 3;
-
-						shootAnim += FlxG.random.int(0, 1);
-
-						playAnim('shoot' + shootAnim, true);
-						animationNotes.shift();
-					}
-				}
-
-				if (animation.curAnim.finished)
-				{
-					playAnim(animation.curAnim.name, false, false, animation.curAnim.numFrames - 3);
-				}
-		}
+		
 
 		super.update(elapsed);
 	}
 
 	private var danced:Bool = false;
 
+	static public var singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+
 	/**
 	 * FOR GF DANCING SHIT
 	 */
-	public function dance()
+	var beat:Int = 0;
+
+	var isDancing:Bool = true;
+
+	public function dance(beat:Int = 0)
 	{
-		if (!debugMode)
+		this.beat = beat;
+		if (holdTimer == 0)
 		{
-			switch (curCharacter)
+			// ✅ GF-style alternate dancing
+			if (animOffsets.exists('danceLeft') && animOffsets.exists('danceRight'))
 			{
-				case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel' | 'gf-tankmen':
-					if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
-					}
-
-				case 'pico-speaker':
-				// lol weed
-				// playAnim('shoot' + FlxG.random.int(1, 4), true);
-
-				case 'tankman':
-					if (!animation.curAnim.name.endsWith('DOWN-alt'))
-						playAnim('idle');
-
-				case 'spooky':
-					danced = !danced;
-
-					if (danced)
-						playAnim('danceRight');
-					else
-						playAnim('danceLeft');
-				default:
-					playAnim('idle');
+				isDancing = !isDancing;
+				playAnim(isDancing ? 'danceLeft' : 'danceRight');
+			}
+			// ✅ Idle dance fallback
+			else if (beat % 2 == 0 && (animation.finished && animation.name == 'idle' || animation.name != 'idle'))
+			{
+				playAnim('idle', true);
 			}
 		}
 	}
@@ -693,5 +643,11 @@ class Character extends FlxSprite
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
 	{
 		animOffsets[name] = [x, y];
+	}
+
+	public function hitNote(note:Note)
+	{
+		playAnim(singAnimations[note.noteData % singAnimations.length], true);
+		holdTimer = (Conductor.stepCrochet * 5) / 1000;
 	}
 }

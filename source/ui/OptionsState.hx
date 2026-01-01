@@ -31,8 +31,9 @@ class OptionsState extends MusicBeatState
 		var options = addPage(Options, new OptionsMenu(false));
 		var preferences = addPage(Preferences, new PreferencesMenu());
 		var controls = addPage(Controls, new ControlsMenu());
+		var offsettest = addPage(Offsets, new OffsetTest());
 		// var colors = addPage(Colors, new ColorsMenu());
-
+		offsettest.onExit.add(exitToMainMenu);
 		if (options.hasMultipleOptions())
 		{
 			options.onExit.add(exitToMainMenu);
@@ -186,6 +187,7 @@ class OptionsMenu extends Page
 		else
 			createItem("login", selectLogin);
 		#end
+		createItem("adjust offsets", function() switchPage(Offsets));
 		createItem("exit", exit);
 	}
 
@@ -271,5 +273,6 @@ enum PageName
 	Options;
 	Controls;
 	Colors;
+	Offsets;
 	Preferences;
 }

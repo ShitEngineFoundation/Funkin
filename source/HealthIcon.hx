@@ -39,7 +39,7 @@ class HealthIcon extends FlxSprite
 
 	public var baseScale:Float = 1;
 	public var bopScaleMult:Float = 1.2;
-	public var bopLerp:Float = 10;
+	public var bopLerp:Float = 15;
 
 	public function bump()
 	{

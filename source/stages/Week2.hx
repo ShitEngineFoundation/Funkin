@@ -5,7 +5,8 @@ import flixel.FlxG;
 
 class Week2 extends BaseStage
 {
-    public var halloweenBG:FlxSprite;
+	public var halloweenBG:FlxSprite;
+
 	override public function create()
 	{
 		var hallowTex = Paths.getSparrowAtlas('halloween_bg');

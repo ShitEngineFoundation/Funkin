@@ -57,6 +57,11 @@ class HealthIcon extends FlxSprite
 	{
 		if (newChar != 'bf-pixel' && newChar != 'bf-old' && newChar != 'bf-holding-gf')
 			newChar = newChar.split('-')[0].trim();
+		if (newChar == 'bf-holding-gf')
+		{
+			baseScale = 0.7;
+			frameOffset.y -= 6;
+		}
 
 		if (newChar != char)
 		{

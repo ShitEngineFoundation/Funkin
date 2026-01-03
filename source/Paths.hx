@@ -1,5 +1,7 @@
 package;
 
+import flixel.graphics.FlxGraphic;
+import animate.FlxAnimateFrames;
 import openfl.media.Sound;
 import haxe.extern.EitherType;
 import flixel.FlxG;
@@ -12,13 +14,14 @@ class Paths
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 
 	static var currentLevel:String;
+	public static var cachedImages:haxe.ds.StringMap<FlxGraphic> = new haxe.ds.StringMap<FlxGraphic>();
 
 	static public function setCurrentLevel(name:String)
 	{
 		currentLevel = name.toLowerCase();
 	}
 
-	static function getPath(file:String, type:AssetType, library:Null<String>)
+	public static function getPath(file:String, ?type:AssetType, ?library:Null<String>)
 	{
 		if (library != null)
 			return getLibraryPath(file, library);
@@ -105,6 +108,40 @@ class Paths
 		return getPath('images/$key.png', IMAGE, library);
 	}
 
+	public static function getGraphic(path:String):EitherType<FlxGraphic, String>
+	{
+		if (cachedImages.exists(path))
+			return cachedImages.get(path);
+
+		if (!OpenFLAssets.exists(path))
+			return path;
+
+		var bitmap = OpenFLAssets.getBitmapData(path);
+		bitmap.disposeImage();
+		var graphic = FlxGraphic.fromBitmapData(bitmap, false, path, false);
+		graphic.persist = true;
+		cachedImages.set(path, graphic);
+		return graphic;
+	}
+
+	// dangerous ahh thing, only execute in middle of state switches
+	public static function clearGraphics()
+	{
+		for (key in cachedImages.keys())
+		{
+			var graphic = cachedImages.get(key);
+			FlxG.bitmap.remove(graphic);
+			OpenFLAssets.cache.removeBitmapData(key);
+			graphic.destroy();
+			graphic.persist = false;
+
+			cachedImages.remove(key);
+			graphic = null;
+
+			trace(' erased shiity  graphic ' + key);
+		}
+	}
+
 	inline static public function font(key:String)
 	{
 		return 'assets/fonts/$key';
@@ -112,7 +149,15 @@ class Paths
 
 	inline static public function getSparrowAtlas(key:String, ?library:String)
 	{
-		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
+		return FlxAtlasFrames.fromSparrow(getGraphic(image(key, library)), file('images/$key.xml', library));
+	}
+
+	static public function getAnimateAtlas(key:String, ?library:String)
+	{
+		var atlas = FlxAnimateFrames.fromAnimate(getPath('images/$key', null, library));
+		if (atlas != null && atlas.parent != null)
+			atlas.parent.bitmap.disposeImage();
+		return atlas;
 	}
 
 	inline static public function getPackerAtlas(key:String, ?library:String)

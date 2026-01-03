@@ -1,0 +1,56 @@
+{
+  "time": 6.1,
+  "scale": 1,
+
+  "icon": "dad",
+  "image": "characters/DADDY_DEAREST",
+
+  "antialiasing": true,
+  "flipX": false,
+
+  "cam_offset": [0, 0],
+  "pos_offset": [0, 0],
+
+  "animations": [
+    {
+      "name": "singLEFT",
+      "fps": 24,
+      "prefix": "left",
+      "looped": false,
+      "offsets": [-3, 24],
+      "indices": []
+    },
+    {
+      "name": "singDOWN",
+      "fps": 24,
+      "prefix": "down",
+      "looped": false,
+      "offsets": [-3, 5],
+      "indices": []
+    },
+    {
+      "name": "singUP",
+      "fps": 24,
+      "prefix": "up",
+      "looped": false,
+      "offsets": [0, 53],
+      "indices": []
+    },
+    {
+      "name": "singRIGHT",
+      "fps": 24,
+      "prefix": "right",
+      "looped": false,
+      "offsets": [40, 3],
+      "indices": []
+    },
+    {
+      "name": "idle",
+      "fps": 24,
+      "prefix": "idle",
+      "looped": false,
+      "offsets": [0, 0],
+      "indices": []
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+"AN":{
+"N":"BoyFriend_Assets",
+"SN":"__BTA_TEMP_SPRITEMAP_PACKED_SYMBOL",
+"TL":{
+"L":[
+{
+"LN":"Ebene_1",
+"FR":[
+{
+"N":"BF idle dance",
+"I":0,
+"DU":13,
+"E":[
+{"SI":{
+"SN":"BF idle dance",
+"FF":0,
+"ST":"G",
+"TRP":{"x":0,"y":0},
+"LP":"LP",
+"MX":[1,0,0,1,-499.55,-4.85]
+}}]},{
+"N":"BF NOTE UP",
+"I":13,
+"DU":14,
+"E":[
+{"SI":{
+"SN":"BF NOTE UP",
+"FF":0,
+"ST":"G",
+"TRP":{"x":0,"y":0},
+"LP":"LP",
+"MX":[1,0,0,1,-240.3,-237.8]
+}}]},{
+"N":"BF NOTE DOWN",
+"I":27,
+"DU":29,
+"E":[
+{"SI":{
+"SN":"BF NOTE DOWN",
+"FF":0,
+"ST":"G",
+"TRP":{"x":0,"y":0},
+"LP":"LP",
+"MX":[1,0,0,1,-193.25,-186.05]
+}}]},{
+"N":"BF NOTE LEFT",
+"I":56,
+"DU":14,
+"E":[
+{"SI":{
+"SN":"BF NOTE LEFT",
+"FF":0,
+"ST":"G",
+"TRP":{"x":0,"y":0},
+"LP":"LP",
+"MX":[1,0,0,1,-484.15,-1.15]
+}}]},{
+"N":"BF NOTE RIGHT",
+"I":70,
+"DU":61,
+"E":[
+{"SI":{
+"SN":"BF NOTE RIGHT",
+"FF":0,
+"ST":"G",
+"TRP":{"x":0,"y":0},
+"LP":"LP",
+"MX":[1,0,0,1,-548.2,1.65]
+}}]}
+]}
+]}}}

@@ -60,15 +60,15 @@ class HealthIcon extends FlxSprite
 		if (newChar == 'bf-holding-gf')
 		{
 			baseScale = 0.7;
-			frameOffset.y -= 6;
+			//frameOffset.y -= 6;
 		}
 
 		if (newChar != char)
 		{
 			if (animation.getByName(newChar) == null)
 			{
-				loadGraphic(Paths.image('icons/icon-' + newChar));
-				loadGraphic(Paths.image('icons/icon-' + newChar), true, Math.floor(width / 2), Math.floor(height));
+				loadGraphic(Paths.getGraphic(Paths.image('icons/icon-' + newChar)));
+				loadGraphic(Paths.getGraphic(Paths.image('icons/icon-' + newChar)), true, Math.floor(width / 2), Math.floor(height));
 				animation.add(newChar, [0, 1], 0, false, isPlayer);
 			}
 			animation.play(newChar);

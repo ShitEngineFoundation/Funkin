@@ -56,7 +56,7 @@ class MainMenuState extends MusicBeatState
 
 		persistentUpdate = persistentDraw = true;
 
-		var bg:FlxSprite = new FlxSprite(Paths.image('menuBG'));
+		var bg:FlxSprite = new FlxSprite(Paths.getGraphic(Paths.image('menuBG')));
 		bg.scrollFactor.x = 0;
 		bg.scrollFactor.y = 0.17;
 		bg.setGraphicSize(Std.int(bg.width * 1.2));
@@ -68,7 +68,7 @@ class MainMenuState extends MusicBeatState
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
 
-		magenta = new FlxSprite(Paths.image('menuDesat'));
+		magenta = new FlxSprite(Paths.getGraphic(Paths.image('menuDesat')));
 		magenta.scrollFactor.x = bg.scrollFactor.x;
 		magenta.scrollFactor.y = bg.scrollFactor.y;
 		magenta.setGraphicSize(Std.int(bg.width));
@@ -97,10 +97,7 @@ class MainMenuState extends MusicBeatState
 		#if CAN_OPEN_LINKS
 		var hasPopupBlocker = #if web true #else false #end;
 
-		if (VideoState.seenVideo)
-			menuItems.createItem('kickstarter', selectDonate, hasPopupBlocker);
-		else
-			menuItems.createItem('donate', selectDonate, hasPopupBlocker);
+		menuItems.createItem('donate', selectDonate, hasPopupBlocker);
 		#end
 		menuItems.createItem('options', function() startExitState(new OptionsState()));
 		// #if newgrounds
@@ -133,8 +130,9 @@ class MainMenuState extends MusicBeatState
 		versionShit.text += ' | Based on Funkin v0.2.8';
 
 		var version = Application.current.meta.get('version');
-		if(OutdatedSubState.latestVer != version) {
-			versionShit.text += " | OUTDATED! New Version available on github! " + 'v${OutdatedSubState.latestVer} is out!'; 
+		if (OutdatedSubState.latestVer != version)
+		{
+			versionShit.text += " | OUTDATED! New Version available on github! " + 'v${OutdatedSubState.latestVer} is out!';
 		}
 
 		// NG.core.calls.event.logEvent('swag').send();

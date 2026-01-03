@@ -10,7 +10,7 @@ class Week1 extends BaseStage
 		bg.active = false;
 		add(bg);
 
-		var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
+		var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.getGraphic(Paths.image('stagefront')));
 		stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
 		stageFront.updateHitbox();
 		stageFront.antialiasing = true;
@@ -18,7 +18,7 @@ class Week1 extends BaseStage
 		stageFront.active = false;
 		add(stageFront);
 
-		var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
+		var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.getGraphic(Paths.image('stagecurtains')));
 		stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
 		stageCurtains.updateHitbox();
 		stageCurtains.antialiasing = true;

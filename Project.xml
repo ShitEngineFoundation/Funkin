@@ -49,6 +49,7 @@
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
 	<set name="BUILD_DIR" value="export/32bit" if="32bits" />
 
+
 	<classpath name="source" />
 
 	<!-- <assets path='assets/preload/music' include="*mp4" embed='false' /> -->
@@ -135,11 +136,20 @@
 	<!--In
 	case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
+	<haxelib name="flixel-animate" />
 	<!--haxelib
 	name="newgrounds" unless="switch"/> -->
 	<haxelib name="faxe" if='switch' />
 	<haxelib name="newgrounds" />
 	<haxelib name="hxcpp-debug-server" if="desktop debug" />
+
+	<section if="MODCHARTING">
+		<haxedef name="FM_ENGINE" value="SHIT" />
+		<haxedef name="FM_ENGINE_VERSION" value="0.2.9" />
+
+		<haxelib name="funkin-modchart" />
+		<haxeflag name="--macro" value="modchart.backend.macros.Macro.includeFiles()" />
+	</section>
 
 	<!-- <haxelib name="flixel-animate" /> -->
 	<!-- <haxelib name="spinehaxe" /> -->
@@ -147,7 +157,8 @@
 
 
 	<!--<haxelib
-	name="discord_rpc" if="cpp"/> --> <!-- foesn't work with neko -->
+	name="discord_rpc" if="cpp"/> --> <!--
+	foesn't work with neko -->
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 
 	<!-- <haxelib name="markdown" /> -->
@@ -223,7 +234,7 @@
 
 	<!-- <haxedef name="CLEAR_INPUT_SAVE"/> -->
 
-	<section if="newgrounds">
+	<section if="debug">
 		<!-- Enables Ng.core.verbose -->
 		<!-- <haxedef name="NG_VERBOSE" /> -->
 
@@ -232,6 +243,9 @@
 
 		<!-- pretends that the saved session Id was expired, forcing the reconnect prompt -->
 		<!-- <haxedef name="NG_FORCE_EXPIRED_SESSION" if="debug" /> -->
+		<define name="HXCPP_BIG_BLOCKS" />
+		<define name="HXCPP_STACKTRACE" />
+		<define name="HXCPP_STACK_TRACE" />
 	</section>
 
 </project>

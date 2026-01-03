@@ -1,0 +1,68 @@
+{
+  "time": 4,
+  "scale": 1,
+  "icon": "exeller",
+  "image": "characters/SonicAssets2",
+  "antialiasing": true,
+  "flipX": false,
+  "cam_offset": [0, 0],
+  "pos_offset": [30, 160],
+  "animations": [
+    {
+      "name": "idle",
+      "fps": 24,
+      "prefix": "SONICmoveIDLE",
+      "looped": false,
+      "offsets": [-40, 0],
+      "indices": []
+    },
+    {
+      "name": "laugh",
+      "fps": 24,
+      "prefix": "SONIClaugh",
+      "looped": false,
+      "offsets": [10, -10],
+      "indices": []
+    },
+    {
+      "name": "singLEFT",
+      "fps": 24,
+      "prefix": "SONICmoveLEFT",
+      "looped": false,
+      "offsets": [74, -15],
+      "indices": []
+    },
+    {
+      "name": "singDOWN",
+      "fps": 24,
+      "prefix": "SONICmoveDOWN",
+      "looped": false,
+      "offsets": [40, -10],
+      "indices": []
+    },
+    {
+      "name": "singUP",
+      "fps": 24,
+      "prefix": "SONICmoveUP",
+      "looped": false,
+      "offsets": [-36, 33],
+      "indices": []
+    },
+    {
+      "name": "singRIGHT",
+      "fps": 24,
+      "prefix": "SONICmoveRIGHT",
+      "looped": false,
+      "offsets": [-30, 10],
+      "indices": []
+    },
+    {
+      "name": "getcha",
+      "fps": 24,
+      "prefix": "sonicImmagetya",
+      "looped": false,
+      "offsets": [22, -5],
+      "indices": []
+    }
+  ]
+}

@@ -27,7 +27,8 @@ class Note extends FlxSprite
 	public var prevNote:Note;
 
 	private var willMiss:Bool = false;
-
+	public var lateMult:Float = 1;
+	public var earlyMult = 0.5;
 	public var altNote:Bool = false;
 	public var invisNote:Bool = false;
 
@@ -69,7 +70,7 @@ class Note extends FlxSprite
 		switch (daStage)
 		{
 			case 'school' | 'schoolEvil':
-				loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels'), true, 17, 17);
+				loadGraphic(Paths.getGraphic(Paths.image('game/notes/pixel/default')), true, 17, 17);
 
 				animation.add('greenScroll', [6]);
 				animation.add('redScroll', [7]);
@@ -78,7 +79,7 @@ class Note extends FlxSprite
 
 				if (isSustainNote)
 				{
-					loadGraphic(Paths.image('weeb/pixelUI/arrowEnds'), true, 7, 6);
+					loadGraphic(Paths.getGraphic(Paths.image('game/notes/pixel/default-ends')), true, 7, 6);
 
 					animation.add('purpleholdend', [4]);
 					animation.add('greenholdend', [6]);
@@ -111,7 +112,7 @@ class Note extends FlxSprite
 				animation.addByPrefix('greenhold', 'green hold piece');
 				animation.addByPrefix('redhold', 'red hold piece');
 				animation.addByPrefix('bluehold', 'blue hold piece');
-				animation.addByPrefix('hold','$color hold piece0');
+				animation.addByPrefix('hold', '$color hold piece0');
 
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
@@ -151,6 +152,7 @@ class Note extends FlxSprite
 		{
 			noteScore * 0.2;
 			alpha = 0.6;
+			earlyMult = 0.17;
 
 			if (PreferencesMenu.getPref('downscroll'))
 				angle = 180;
@@ -218,9 +220,9 @@ class Note extends FlxSprite
 			}
 			else
 			{
-				if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset)
+				if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateMult))
 				{ // The * 0.5 is so that it's easier to hit them too late, instead of too early
-					if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
+					if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyMult))
 						canBeHit = true;
 				}
 				else

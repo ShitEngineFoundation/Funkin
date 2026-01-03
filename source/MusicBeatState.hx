@@ -10,8 +10,12 @@ import flixel.util.FlxTimer;
 
 class MusicBeatState extends FlxUIState
 {
-	private var curStep:Int = 0;
-	private var curBeat:Int = 0;
+	public var curStep:Int = 0;
+	public var curBeat:Int = 0;
+
+	public var curStepDec:Float = 0;
+	public var curBeatDec:Float = 0;
+
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
@@ -34,7 +38,6 @@ class MusicBeatState extends FlxUIState
 		updateCurStep();
 		updateBeat();
 
-
 		if (oldStep != curStep && curStep >= 0)
 			stepHit();
 
@@ -46,7 +49,8 @@ class MusicBeatState extends FlxUIState
 
 	private function updateBeat():Void
 	{
-		curBeat = Math.floor(curStep / 4);
+		curBeat = Math.floor(curStep * .25);
+		curBeatDec = curStep * .25;
 	}
 
 	private function updateCurStep():Void
@@ -63,6 +67,7 @@ class MusicBeatState extends FlxUIState
 		}
 
 		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
+		curStepDec = lastChange.stepTime + ((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
 	}
 
 	public function stepHit():Void
